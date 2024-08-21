@@ -3,7 +3,7 @@ from itertools import product
 from sqlalchemy import select
 
 from database import new_session, ProductOrm
-from schemas import SProductAdd
+from schemas import SProductAdd, SProduct
 
 
 class ProductRepository:
@@ -20,9 +20,10 @@ class ProductRepository:
 
 
     @classmethod
-    async def find_all(cls):
+    async def find_all(cls) -> list[SProduct]:
         async with new_session() as session:
             query = select(ProductOrm)
             result = await session.execute(query)
             product_models = result.scalars().all()
+            product_schemas = [SProduct.model_validate(product) for product in product_models]
             return product_models

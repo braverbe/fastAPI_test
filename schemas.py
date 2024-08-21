@@ -6,5 +6,9 @@ class SProductAdd(BaseModel):
     cost: int
     amount: int
 
-class SProductRead(SProductAdd):
+class SProduct(SProductAdd):
     id: int
+
+class SProductID(BaseModel):
+    ok: bool = True
+    product_id: int

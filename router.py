@@ -3,23 +3,24 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from repository import ProductRepository
-from schemas import SProductAdd
+from schemas import SProduct, SProductAdd, SProductID
 
 router = APIRouter(
-    prefix='/products'
+    prefix='/products',
+    tags=['Товары']
 )
 
-@router.post('/products')
+@router.post('/')
 async def add_product(
     product: Annotated[SProductAdd, Depends()],
-):
-    await ProductRepository.add_one(product)
-    return {"ok": "True"}
+) -> SProductID:
+    product_id = await ProductRepository.add_one(product)
+    return {"ok": "True", "product_id": product_id}
 
 @router.get("/")
-async def det_products():
+async def det_products() -> list[SProduct]:
     products = await ProductRepository.find_all()
-    return {"products": products}
+    return {"data": products}
 
 
 @router.get("/hello/{name}")
