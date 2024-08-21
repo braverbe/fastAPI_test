@@ -3,12 +3,12 @@ from itertools import product
 from sqlalchemy import select
 
 from database import new_session, ProductOrm
-from main import SProductAdd
+from schemas import SProductAdd
 
 
 class ProductRepository:
     @classmethod
-    async def add_one(clscls, data: SProductAdd):
+    async def add_one(cls, data: SProductAdd) -> int:
         async with new_session() as session:
             product_dict = data.model_dump()
 
@@ -24,5 +24,5 @@ class ProductRepository:
         async with new_session() as session:
             query = select(ProductOrm)
             result = await session.execute(query)
-            product_models = result.scalara().all()
+            product_models = result.scalars().all()
             return product_models
